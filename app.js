@@ -109,5 +109,3 @@ window.addEventListener("load", function() {
     resetBoard();
     document.querySelector("button").addEventListener("click", resetBoard);
 });
-
-
