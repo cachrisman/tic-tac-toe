@@ -1,23 +1,29 @@
 <!DOCTYPE HTML>
 <html>
-  <head>
-    <script src='ticTacToe.js'></script>
+
+<head>
+    <script src="app.js"></script>
     <link href="style.css" rel="stylesheet">
-  </head>
-  <body>
-    <h1>Tic Tac Toe</h1>
-    <div id='board'>
-      <!-- the `&nbsp;` in each div is a non-breakable space.
-           It prevents the div from collapsing. -->
-      <div class='box'>&nbsp;</div>
-      <div class='box'>&nbsp;</div>
-      <div class='box'>&nbsp;</div>
-      <div class='box'>&nbsp;</div>
-      <div class='box'>&nbsp;</div>
-      <div class='box'>&nbsp;</div>
-      <div class='box'>&nbsp;</div>
-      <div class='box'>&nbsp;</div>
-      <div class='box'>&nbsp;</div>
+</head>
+
+<body>
+    <h1 class="center">Tic Tac Toe</h1>
+    <div class="center" id="top">
+        <div id="playermove">&nbsp;</div>
+        <div id="notification">&nbsp;</div>
+        <div id="reset"><button>Reset</button></div>
     </div>
-  </body>
+    <div id='board'>
+        <div id='0' class='box'>&nbsp;</div>
+        <div id='1' class='box'>&nbsp;</div>
+        <div id='2' class='box'>&nbsp;</div>
+        <div id='3' class='box'>&nbsp;</div>
+        <div id='4' class='box'>&nbsp;</div>
+        <div id='5' class='box'>&nbsp;</div>
+        <div id='6' class='box'>&nbsp;</div>
+        <div id='7' class='box'>&nbsp;</div>
+        <div id='8' class='box'>&nbsp;</div>
+    </div>
+</body>
+
 </html>
