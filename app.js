@@ -40,8 +40,9 @@ window.addEventListener("load", function() {
     };
 
     /*
-     * Clears the board tracker, resets XsMove, turnCount, board, playermove, notification
-     * div to inital conditions, and adds a click event listener on #board to call makeMove
+     * Clears the board tracker, resets XsMove, turnCount, board to inital conditions, calls 
+     * updateContent to reset playermove and notification divs to initial conditions and adds a
+     * click event listener on #board to call makeMove
      */
     var resetBoard = function(event) {
         XsMove = true;
@@ -54,52 +55,51 @@ window.addEventListener("load", function() {
         for (var i = 0; i < temp.length; i++) {
             temp[i].innerHTML = "&nbsp;";
         }
-        playermove.innerHTML = "X's move";
-        notification.innerHTML = "";
+        updateContent("&nbsp;", "", "X's move");
         document.querySelector("#board").addEventListener("click", makeMove);
     };
 
     /*
+     * Updates notification div with notification_text and notification_color, updates playermove div
+     * with playermove_text, and if passed, alerts user with alert_text
+     */
+    var updateContent = function(notification_text, notification_color, playermove_text, alert_text) {
+        notification.innerHTML = notification_text;
+        notification.style.backgroundColor = notification_color;
+        playermove.innerHTML = playermove_text;
+        if (alert_text) alert(alert_text);
+    };
+    
+    /*
      * When user clicks a square, this function checks whether the square has already been clicked,
-     * if the square has been clicked, it updates notification div and alerts the user.
+     * if the square has been clicked, it calls updateContent with appropriate messages.
      *
-     * If not it clears notification div, sets the square to the current player, updates playermove
-     * div, updates the board tracker, swaps current player, increments turnCount and checks for a
+     * If not it calls updateContent with appropriate messages, sets the square to the current player,
+     * updates the board tracker, swaps current player, increments turnCount and checks for a
      * winner.
      *
-     * If there is a winner, it clears playermove div, updates notification space, removes 
-     * the click event listener (to stop users from entering moves), and alerts user with winner.
+     * If there is a winner, it calls updateContent with appropriate messages, and removes 
+     * the click event listener (to stop users from entering moves).
      *
-     * If turnCount equals 9, then it clears playermove, updates notification, removes click event
-     * listener and alerts user of tie.
+     * If turnCount equals 9, then it calls updateContent with appropriate messages, and removes 
+     * click event listener.
      */
     var makeMove = function(event) {
         if (event.target.innerHTML === "X" || event.target.innerHTML === "O") {
-            notification.innerHTML = "Already selected";
-            notification.style.backgroundColor = "red";
-            playermove.innerHTML = "Still " + (XsMove ? "X" : "O") + "'s move";
-            alert("Already selected. Still " + (XsMove ? "X" : "O") + "'s move");
+            updateContent("Already selected", "red", "Still " + (XsMove ? "X" : "O") + "'s move", "Already selected. Still " + (XsMove ? "X" : "O") + "'s move");
         } else {
-            notification.innerHTML = "&nbsp;";
-            notification.style.backgroundColor = "";
+            updateContent("&nbsp;", "", (XsMove ? "O" : "X") + "'s move");
             event.target.innerHTML = XsMove ? "X" : "O";
-            playermove.innerHTML = (XsMove ? "O" : "X") + "'s move";
             board[event.target.id] = XsMove ? "X" : "O";
             XsMove = !XsMove;
             turnCount++;
             winner = checkWinner();
             if (winner) {
-                playermove.innerHTML = "&nbsp;";
-                notification.innerHTML = winner + " Wins!";
-                notification.style.backgroundColor = "lime";
                 document.querySelector("#board").removeEventListener("click", makeMove);
-                alert(winner + " Wins!");
+                updateContent(winner + " Wins!", "lime", "&nbsp;", winner + " Wins!");
             } else if (turnCount == 9) {
-                playermove.innerHTML = "&nbsp;";
-                notification.innerHTML = "Its a Tie!!";
-                notification.style.backgroundColor = "lime";
                 document.querySelector("#board").removeEventListener("click", makeMove);
-                alert("Its a Tie!!");
+                updateContent("Its a Tie!!", "lime", "&nbsp;", "Its a Tie!!");
             }
         }
     };
@@ -109,3 +109,5 @@ window.addEventListener("load", function() {
     resetBoard();
     document.querySelector("button").addEventListener("click", resetBoard);
 });
+
+
