@@ -44,17 +44,12 @@ window.addEventListener("load", function() {
      * updateContent to reset playermove and notification divs to initial conditions and adds a
      * click event listener on #board to call makeMove
      */
-    var resetBoard = function(event) {
+    var resetBoard = function() {
         XsMove = true;
         turnCount = 0;
-        board = [null, null, null,
-            null, null, null,
-            null, null, null
-        ];
+        board = [null, null, null, null, null, null, null, null, null];
         var temp = document.querySelectorAll(".box");
-        for (var i = 0; i < temp.length; i++) {
-            temp[i].innerHTML = "&nbsp;";
-        }
+        for (var i = 0; i < temp.length; i++) temp[i].innerHTML = "&nbsp;";
         updateContent("&nbsp;", "", "X's move");
         document.querySelector("#board").addEventListener("click", makeMove);
     };
@@ -69,7 +64,7 @@ window.addEventListener("load", function() {
         playermove.innerHTML = playermove_text;
         if (alert_text) alert(alert_text);
     };
-    
+
     /*
      * When user clicks a square, this function checks whether the square has already been clicked,
      * if the square has been clicked, it calls updateContent with appropriate messages.
