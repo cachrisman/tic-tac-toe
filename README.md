@@ -1,6 +1,6 @@
 #Week 1 Project - Tic Tac Toe
 
-completed game demo: [Tic-Tac-Toe](http://www.charliechrisman.com/tic-tac-toe/)
+completed game demo: <a href="http://charliechrisman.com/tic-tac-toe/" target="_blank">Tic-tac-toe</a>
 
 **Objective:** Build a tic taco game in HTML and pure javascript.
 
