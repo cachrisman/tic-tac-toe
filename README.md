@@ -1,5 +1,7 @@
 #Week 1 Project - Tic Tac Toe
 
+completed game demo: [Tic-Tac-Toe](http://www.charliechrisman.com/tic-tac-toe/)
+
 **Objective:** Build a tic taco game in HTML and pure javascript.
 
 This week we have been learning about writing functions, working with loops, and writing conditionals. We also learned about how parts of HTML work and function.
