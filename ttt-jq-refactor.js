@@ -48,13 +48,18 @@ $(function() {
     var resetBoard = function() {
         XsMove = true;
         turnCount = 0;
-        board = [null, null, null, null, null, null, null, null, null];
+        _board = [null, null, null, null, null, null, null, null, null];
+        moves = [];
         // var temp = document.querySelectorAll(".box");
         // for (var i = 0; i < temp.length; i++) temp[i].innerHTML = "&nbsp;";
         $('.box').html("&nbsp;");
         updateContent("&nbsp;", "", "X's move");
         // document.querySelector("#board").addEventListener("click", makeMove);
-        $("#board").click(makeMove);
+        // var ev = $._data(element, 'events');
+        // if(ev && ev.click) alert('click bound');
+        // if ($._data('#board', 'events'))
+         $("#board").off("click");
+         $("#board").click(makeMove);
     };
 
     /*
@@ -89,10 +94,11 @@ $(function() {
         if (event.target.innerHTML === "X" || event.target.innerHTML === "O") {
             updateContent("Already selected", "red", "Still " + (XsMove ? "X" : "O") + "'s move", "Already selected. Still " + (XsMove ? "X" : "O") + "'s move");
         } else {
-            updateContent("&nbsp;", "", (XsMove ? "O" : "X") + "'s move");
             event.target.innerHTML = XsMove ? "X" : "O";
-            board[event.target.id] = XsMove ? "X" : "O";
+            _board[event.target.id] = XsMove ? "X" : "O";
+            moves.push([event.target.id,XsMove ? "X" : "O"]);
             XsMove = !XsMove;
+            updateContent("&nbsp;", "", (XsMove ? "X" : "O") + "'s move");
             turnCount++;
             winner = checkWinner();
             if (winner) {
@@ -106,10 +112,21 @@ $(function() {
             }
         }
     };
+
+    var undoMove = function() {
+        _board[moves[moves.length-1][0]] = null;
+        $('#'+moves[moves.length-1][0]).html('&nbsp;');
+        XsMove = !XsMove;
+        turnCount--;
+        moves = moves.slice(0,-1);
+        updateContent("&nbsp;", "", (XsMove ? "X" : "O") + "'s move");
+
+    };
     /*
      * Upon page load, resets board and sets up reset button click event listener
      */
     resetBoard();
     // document.querySelector("button").addEventListener("click", resetBoard);
-    $('button').click(resetBoard);
+    $('#reset').click(resetBoard);
+    $('#undo').click(undoMove);
 });

@@ -27,7 +27,7 @@
 
 #notification,
 #playermove,
-#reset {
+#buttons {
     width: 10em;
     display: inline-block;
     text-align: center;
