@@ -1,3 +1,4 @@
+// "use strict";
 /*
  * Tic-tac-toe game - waits for page to load then sets up game
  */
@@ -7,7 +8,7 @@ window.addEventListener("load", function() {
      * XsMove, turnCount and board will be set with resetBoard, so just declare
      * winningCombinations, playermove and notification don't change, so declare and set
      */
-    var XsMove, turnCount, board = [],
+    var XsMove, turnCount, winner, board = [],
         winningCombinations = [
             [0, 1, 2],
             [3, 4, 5],
@@ -34,6 +35,7 @@ window.addEventListener("load", function() {
                     return true;
             }
         };
+
         if (isWinner("X")) return "X";
         if (isWinner("O")) return "O";
         return false;

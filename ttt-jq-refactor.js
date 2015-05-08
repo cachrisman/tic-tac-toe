@@ -1,15 +1,17 @@
 /*
  * Tic-tac-toe game - waits for page to load then sets up game
  */
-// window.addEventListener("load", function() {
-$(function() {
+
+$( document ).ready(function() {
     /*
      * Initial variable declaration and setting.
      * XsMove, turnCount and board will be set with resetBoard, so just declare
      * winningCombinations, playermove and notification don't change, so declare and set
      */
-    var XsMove, turnCount, board = [],
-        winningCombinations = [
+    console.log("ttt is ready");
+    var XsMove, winner, turnCount;
+    var _board = [];
+    var winningCombinations = [
             [0, 1, 2],
             [3, 4, 5],
             [6, 7, 8],
@@ -19,8 +21,6 @@ $(function() {
             [0, 4, 8],
             [2, 4, 6]
         ];
-    // playermove = document.querySelector("#playermove"),
-    // notification = document.querySelector("#notification");
 
     /*
      * Checks current board against winning conditions array, and returns winner if found
@@ -28,16 +28,24 @@ $(function() {
      */
     var checkWinner = function() {
         var isWinner = function(symbol) {
+            var hasWon = false;
             for (var i = 0; i < winningCombinations.length; i++) {
-                if (board[winningCombinations[i][0]] === symbol &&
-                    board[winningCombinations[i][1]] === symbol &&
-                    board[winningCombinations[i][2]] === symbol)
-                    return true;
+                if (_board[winningCombinations[i][0]] === symbol &&
+                    _board[winningCombinations[i][1]] === symbol &&
+                    _board[winningCombinations[i][2]] === symbol)
+                    hasWon = true;
             }
+            return hasWon;
         };
-        if (isWinner("X")) return "X";
-        if (isWinner("O")) return "O";
-        return false;
+        if (isWinner("X")) winner = "X";
+        if (isWinner("O")) winner = "O";
+        if (winner) {
+            $('#board').off("click");
+            updateContent(winner + " Wins!", "lime", "&nbsp;", winner + " Wins!");
+        } else if (turnCount == 9) {
+            $('#board').off("click");
+            updateContent("Its a Tie!!", "lime", "&nbsp;", "Its a Tie!!");
+        }
     };
 
     /*
@@ -50,16 +58,16 @@ $(function() {
         turnCount = 0;
         _board = [null, null, null, null, null, null, null, null, null];
         moves = [];
-        // var temp = document.querySelectorAll(".box");
-        // for (var i = 0; i < temp.length; i++) temp[i].innerHTML = "&nbsp;";
+        winner = null;
         $('.box').html("&nbsp;");
         updateContent("&nbsp;", "", "X's move");
-        // document.querySelector("#board").addEventListener("click", makeMove);
-        // var ev = $._data(element, 'events');
-        // if(ev && ev.click) alert('click bound');
-        // if ($._data('#board', 'events'))
-         $("#board").off("click");
-         $("#board").click(makeMove);
+
+        $("#undo").click(undoMove); //EL for undo btn
+        $("#redo").click(redoMove); //EL for redo btn
+        $("#board").off("click");
+        $("#board").click(makeMove);
+        $('#undo').prop('disabled', true);
+        $('#redo').prop('disabled', true);
     };
 
     /*
@@ -67,11 +75,8 @@ $(function() {
      * with playermove_text, and if passed, alerts user with alert_text
      */
     var updateContent = function(notification_text, notification_color, playermove_text, alert_text) {
-        // notification.innerHTML = notification_text;
         $('#notification').html(notification_text);
-        // notification.style.backgroundColor = notification_color;
         $('#notification').css("background-color", notification_color);
-        // playermove.innerHTML = playermove_text;
         $('#playermove').html(playermove_text);
         if (alert_text) alert(alert_text);
     };
@@ -100,33 +105,42 @@ $(function() {
             XsMove = !XsMove;
             updateContent("&nbsp;", "", (XsMove ? "X" : "O") + "'s move");
             turnCount++;
-            winner = checkWinner();
-            if (winner) {
-                // document.querySelector("#board").removeEventListener("click", makeMove);
-                $('#board').off("click");
-                updateContent(winner + " Wins!", "lime", "&nbsp;", winner + " Wins!");
-            } else if (turnCount == 9) {
-                // document.querySelector("#board").removeEventListener("click", makeMove);
-                $('#board').off("click");
-                updateContent("Its a Tie!!", "lime", "&nbsp;", "Its a Tie!!");
-            }
+            if (turnCount > 0) $('#undo').prop('disabled', false);
+            checkWinner();
         }
     };
 
     var undoMove = function() {
-        _board[moves[moves.length-1][0]] = null;
-        $('#'+moves[moves.length-1][0]).html('&nbsp;');
-        XsMove = !XsMove;
-        turnCount--;
-        moves = moves.slice(0,-1);
-        updateContent("&nbsp;", "", (XsMove ? "X" : "O") + "'s move");
+        if (turnCount > 0) {
+            turnCount--;
+            _board[moves[turnCount][0]] = null;
+            $('#'+moves[turnCount][0]).html('&nbsp;');
+            XsMove = !XsMove;
+            updateContent("&nbsp;", "", (XsMove ? "X" : "O") + "'s move");
+            if (turnCount === 0) $('#undo').prop('disabled', true);
+            if (turnCount < moves.length) $('#redo').prop('disabled', false);
+            if (winner) {
+                $("#board").click(makeMove);
+                winner = null;
+            }
+        }
+    };
 
+    var redoMove = function() {
+        if (turnCount < moves.length) {
+            _board[moves[turnCount][0]] = moves[turnCount][1];
+            $('#'+moves[turnCount][0]).html(moves[turnCount][1]);
+            XsMove = !XsMove;
+            turnCount++;
+            if (turnCount < moves.length) $('#redo').prop('disabled', false);
+            if (turnCount === moves.length) $('#redo').prop('disabled', true);
+            updateContent("&nbsp;", "", (XsMove ? "X" : "O") + "'s move");
+            checkWinner();
+        }
     };
     /*
      * Upon page load, resets board and sets up reset button click event listener
      */
     resetBoard();
-    // document.querySelector("button").addEventListener("click", resetBoard);
     $('#reset').click(resetBoard);
-    $('#undo').click(undoMove);
 });
