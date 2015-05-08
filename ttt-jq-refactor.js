@@ -8,9 +8,8 @@ $( document ).ready(function() {
      * XsMove, turnCount and board will be set with resetBoard, so just declare
      * winningCombinations, playermove and notification don't change, so declare and set
      */
-    console.log("ttt is ready");
     var XsMove, winner, turnCount;
-    var _board = [];
+    var board = [];
     var winningCombinations = [
             [0, 1, 2],
             [3, 4, 5],
@@ -30,9 +29,9 @@ $( document ).ready(function() {
         var isWinner = function(symbol) {
             var hasWon = false;
             for (var i = 0; i < winningCombinations.length; i++) {
-                if (_board[winningCombinations[i][0]] === symbol &&
-                    _board[winningCombinations[i][1]] === symbol &&
-                    _board[winningCombinations[i][2]] === symbol)
+                if (board[winningCombinations[i][0]] === symbol &&
+                    board[winningCombinations[i][1]] === symbol &&
+                    board[winningCombinations[i][2]] === symbol)
                     hasWon = true;
             }
             return hasWon;
@@ -56,7 +55,7 @@ $( document ).ready(function() {
     var resetBoard = function() {
         XsMove = true;
         turnCount = 0;
-        _board = [null, null, null, null, null, null, null, null, null];
+        board = [null, null, null, null, null, null, null, null, null];
         moves = [];
         winner = null;
         $('.box').html("&nbsp;");
@@ -100,7 +99,7 @@ $( document ).ready(function() {
             updateContent("Already selected", "red", "Still " + (XsMove ? "X" : "O") + "'s move", "Already selected. Still " + (XsMove ? "X" : "O") + "'s move");
         } else {
             event.target.innerHTML = XsMove ? "X" : "O";
-            _board[event.target.id] = XsMove ? "X" : "O";
+            board[event.target.id] = XsMove ? "X" : "O";
             moves.push([event.target.id,XsMove ? "X" : "O"]);
             XsMove = !XsMove;
             updateContent("&nbsp;", "", (XsMove ? "X" : "O") + "'s move");
@@ -113,7 +112,7 @@ $( document ).ready(function() {
     var undoMove = function() {
         if (turnCount > 0) {
             turnCount--;
-            _board[moves[turnCount][0]] = null;
+            board[moves[turnCount][0]] = null;
             $('#'+moves[turnCount][0]).html('&nbsp;');
             XsMove = !XsMove;
             updateContent("&nbsp;", "", (XsMove ? "X" : "O") + "'s move");
@@ -128,7 +127,7 @@ $( document ).ready(function() {
 
     var redoMove = function() {
         if (turnCount < moves.length) {
-            _board[moves[turnCount][0]] = moves[turnCount][1];
+            board[moves[turnCount][0]] = moves[turnCount][1];
             $('#'+moves[turnCount][0]).html(moves[turnCount][1]);
             XsMove = !XsMove;
             turnCount++;
